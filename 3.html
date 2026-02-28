@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>หน้าสอง</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Sriracha&display=swap" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    overflow: hidden;
+    background: #fff0f5;
+    font-family: 'Sriracha', cursive;
+}
+
+.floatingText {
+    position: absolute;
+    white-space: nowrap;
+    font-weight: bold;
+}
+</style>
+</head>
+<body>
+
+<script>
+let messages = JSON.parse(localStorage.getItem("messageList")) || [];
+let objects = [];
+
+messages.forEach(text => {
+    let div = document.createElement("div");
+    div.className = "floatingText";
+    div.innerText = text;
+
+    // สุ่มขนาด
+    let size = 20 + Math.random() * 40;
+    div.style.fontSize = size + "px";
+
+   //สีที่มีให้
+   let colors = ["#FFFAF0", "#E6E6FA", "#F0FFFF", "#F0F8FF", "#8FBC8F","#E0FFFF", "#DEB887", "#e1f5fe", "#f1f8e9", "#fffde7"];
+    // สุ่มสี
+    div.style.color = colors[Math.floor(Math.random() * colors.length)];
+
+    document.body.appendChild(div);
+
+    let obj = {
+        el: div,
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight,
+        vx: (Math.random() - 0.5) * 4,
+        vy: (Math.random() - 0.5) * 4
+    };
+
+    objects.push(obj);
+});
+
+function update() {
+    objects.forEach(obj => {
+        obj.x += obj.vx;
+        obj.y += obj.vy;
+
+        let rect = obj.el.getBoundingClientRect();
+
+        // ชนขอบซ้ายขวา
+        if (obj.x <= 0 || obj.x + rect.width >= window.innerWidth) {
+            obj.vx *= -1;
+        }
+
+        // ชนขอบบนล่าง
+        if (obj.y <= 0 || obj.y + rect.height >= window.innerHeight) {
+            obj.vy *= -1;
+        }
+
+        obj.el.style.left = obj.x + "px";
+        obj.el.style.top = obj.y + "px";
+    });
+
+    checkCollision();
+    requestAnimationFrame(update);
+}
+
+function checkCollision() {
+    for (let i = 0; i < objects.length; i++) {
+        for (let j = i + 1; j < objects.length; j++) {
+            let a = objects[i];
+            let b = objects[j];
+
+            let rectA = a.el.getBoundingClientRect();
+            let rectB = b.el.getBoundingClientRect();
+
+            if (
+                rectA.left < rectB.right &&
+                rectA.right > rectB.left &&
+                rectA.top < rectB.bottom &&
+                rectA.bottom > rectB.top
+            ) {
+                // สลับทิศทางเวลา撞กัน
+                let tempVx = a.vx;
+                let tempVy = a.vy;
+
+                a.vx = b.vx;
+                a.vy = b.vy;
+
+                b.vx = tempVx;
+                b.vy = tempVy;
+            }
+        }
+    }
+}
+
+update();
+</script>
+
+</body>
+</html>

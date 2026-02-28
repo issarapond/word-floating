@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>หน้าที่สอง</title>
+</head>
+<style>
+  
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;  /* จัดกลางแนวนอน */
+    align-items: center;      /* จัดกลางแนวตั้ง */
+    background-color: #ffe6f2;
+    font-family: Arial, sans-serif;
+}
+
+.box {
+    width: 300px;
+    padding: 30px;
+    background-color: #ffd6ec;
+    border-radius: 25px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+input {
+    width: 90%;
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 15px;
+    border: 1px solid #ccc;
+    outline: none; 
+}
+
+button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    background-color: #ff9ed2;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #ff70b8;
+} 
+
+.list {
+    margin-top: 15px;
+    text-align: left;
+    font-size: 14px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2> Anything </h2>
+
+    <input type="text" id="myText" placeholder="Type...">
+    <br>
+    <button onclick="addText()">add text</button>
+    <button onclick="goToPage()">send</button>
+
+    <div class="list" id="textList"></div>
+</div>
+
+<script>
+var messages = [];
+
+function addText() {
+    var text = document.getElementById("myText").value;
+
+    if (text.trim() !== "") {
+        messages.push(text);
+        document.getElementById("myText").value = "";
+
+        showList();
+    }
+}
+
+function showList() {
+    var listDiv = document.getElementById("textList");
+    listDiv.innerHTML = "";
+
+    for (var i = 0; i < messages.length; i++) {
+        listDiv.innerHTML += "• " + messages[i] + "<br>";
+    }
+}
+
+function goToPage() {
+    localStorage.setItem("messageList", JSON.stringify(messages));
+    window.location.href = "3.html";
+}
+</script>
+
+ 
+
+
+
+
+
+</body>
+</html>
